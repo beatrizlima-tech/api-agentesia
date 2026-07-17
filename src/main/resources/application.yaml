@@ -1,3 +1,19 @@
 spring:
+
   application:
     name: api-agentesia
+
+  mongodb:
+    host: localhost
+    port: 27018
+    database: bd-agentesia
+    username: coti
+    password: coti
+    authentication-database: admin
+
+server:
+  port: 8084
+
+openai:
+  apikey: ${OPENAI_API_KEY}
+  model: gpt-4o-mini

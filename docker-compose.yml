@@ -1,0 +1,92 @@
+name: api-agentesia
+
+services:
+
+  mongodb:
+    image: mongo:8.0
+    container_name: api-agentesia-mongodb
+    restart: unless-stopped
+
+    ports:
+      - "27018:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: coti
+      MONGO_INITDB_ROOT_PASSWORD: coti
+      MONGO_INITDB_DATABASE: bd-agentesia
+
+    volumes:
+      - mongodb_data:/data/db
+
+    networks:
+      - agentesia_network
+
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: api-agentesia-mongo-express
+    restart: unless-stopped
+
+    depends_on:
+      - mongodb
+
+    ports:
+      - "5058:8081"
+
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_MONGODB_PORT: 27017
+
+      ME_CONFIG_MONGODB_ADMINUSERNAME: coti
+      ME_CONFIG_MONGODB_ADMINPASSWORD: coti
+      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+
+      ME_CONFIG_BASICAUTH_ENABLED: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: coti
+      ME_CONFIG_BASICAUTH_PASSWORD: coti
+
+    volumes:
+      - mongo_express_data:/data
+
+    networks:
+      - agentesia_network
+
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: api-agentesia-mailhog
+    restart: unless-stopped
+
+    ports:
+      # Servidor SMTP
+      - "1025:1025"
+
+      # Interface gráfica
+      - "8025:8025"
+
+    environment:
+      MH_STORAGE: maildir
+      MH_MAILDIR_PATH: /maildir
+
+    volumes:
+      - mailhog_data:/maildir
+
+    networks:
+      - agentesia_network
+
+
+volumes:
+  mongodb_data:
+    name: api-agentesia-mongodb-data
+
+  mongo_express_data:
+    name: api-agentesia-mongo-express-data
+
+  mailhog_data:
+    name: api-agentesia-mailhog-data
+
+
+networks:
+  agentesia_network:
+    name: api-agentesia-network
+    driver: bridge
