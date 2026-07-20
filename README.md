@@ -50,6 +50,7 @@ A análise é produzida exclusivamente com base nos dados enviados na requisiç�
 * Tratamento de erros retornados pela OpenAI;
 * Persistência do histórico de relatórios no MongoDB;
 * Documentação dos endpoints com Swagger/OpenAPI;
+* Configuração global de CORS para integração com o frontend;
 * Ambiente Docker com MongoDB, Mongo Express e MailHog;
 * Configuração externa da chave da OpenAI por variável de ambiente.
 
@@ -101,6 +102,7 @@ RelatorioResponse
 | Java                 | Linguagem principal                      |
 | Spring Boot          | Desenvolvimento da API                   |
 | Spring Web           | Criação dos endpoints REST               |
+| Spring MVC           | Configuração global de CORS              |
 | RestClient           | Comunicação com a OpenAI                 |
 | Spring Data MongoDB  | Persistência dos relatórios              |
 | MongoDB              | Banco de dados NoSQL                     |
@@ -125,6 +127,7 @@ src
     │       ├── components
     │       │   └── OpenAiComponent.java
     │       ├── configurations
+    │       │   ├── CorsConfiguration.java
     │       │   ├── ObjectMapperConfiguration.java
     │       │   ├── RestClientConfiguration.java
     │       │   └── SwaggerConfiguration.java
@@ -240,6 +243,39 @@ docker compose down -v
 ```
 
 > O comando com `-v` também remove os dados armazenados nos volumes do MongoDB.
+
+---
+
+## 🌐 Configuração de CORS
+
+A aplicação possui uma configuração global de CORS preparada para permitir a comunicação com o projeto frontend.
+
+Origem autorizada:
+
+```text
+http://localhost:8083
+```
+
+A configuração é aplicada a todos os endpoints da API:
+
+```text
+/**
+```
+
+Métodos HTTP permitidos:
+
+* `GET`;
+* `POST`;
+* `PUT`;
+* `DELETE`.
+
+Também são permitidos todos os cabeçalhos enviados nas requisições.
+
+A configuração está localizada na classe:
+
+```text
+CorsConfiguration.java
+```
 
 ---
 
